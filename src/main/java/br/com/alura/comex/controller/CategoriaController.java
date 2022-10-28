@@ -22,12 +22,15 @@ import java.util.Optional;
 @Service
 public class CategoriaController {
 
-    @Autowired
-    private CategoriaRepository categoriaRepository;
+    private final CategoriaRepository categoriaRepository;
+
+    public CategoriaController(CategoriaRepository categoriaRepository){
+        this.categoriaRepository = categoriaRepository;
+    }
 
 
     @GetMapping
-    public List<CategoriaDto> lista() {
+    public List<CategoriaDto> listar() {
         List<Categoria> categorias = categoriaRepository.findAll();
         return CategoriaDto.converter(categorias);
     }

@@ -20,10 +20,6 @@ public class CategoriaForm {
         this.nome = nome;
     }
 
-    public Categoria converter() {
-        return new Categoria();
-    }
-
     public Categoria atualizar(Long id, CategoriaRepository categoriaRepository) {
         Categoria categoria = categoriaRepository.getReferenceById(id);
 
