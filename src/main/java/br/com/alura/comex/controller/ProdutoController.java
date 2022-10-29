@@ -6,7 +6,6 @@ import br.com.alura.comex.model.Categoria;
 import br.com.alura.comex.model.Produto;
 import br.com.alura.comex.repository.CategoriaRepository;
 import br.com.alura.comex.repository.ProdutoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
@@ -33,14 +32,14 @@ public class ProdutoController {
     }
 
     @GetMapping
-    public List<ProdutoDto> lista() {
+    public List<ProdutoDto> getProdutos() {
         List<Produto> produtos = produtoRepository.findAll();
         return ProdutoDto.converter(produtos);
     }
 
     @PostMapping
     @Transactional
-    public ResponseEntity<ProdutoDto> cadastrar(@RequestBody @Valid ProdutoForm form, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<ProdutoDto> postProduto(@RequestBody @Valid ProdutoForm form, UriComponentsBuilder uriBuilder) {
         Produto produto = new Produto();
         produto.setNome(form.getNome());
         produto.setDescricao(form.getDescricao());

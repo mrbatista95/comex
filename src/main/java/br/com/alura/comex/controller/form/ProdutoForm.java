@@ -1,6 +1,5 @@
 package br.com.alura.comex.controller.form;
 
-import br.com.alura.comex.model.Categoria;
 import br.com.alura.comex.model.Produto;
 import br.com.alura.comex.repository.ProdutoRepository;
 import org.hibernate.validator.constraints.Length;
@@ -12,18 +11,18 @@ import java.math.BigDecimal;
 
 public class ProdutoForm {
 
-    //@NotEmpty @NotNull @Length(min = 2)
+    @NotEmpty @NotNull @Length(min = 2)
     private String nome;
 
     private String descricao;
 
-    //@NotNull @Min(value = 0)
+    @NotNull @Min(value = 0)
     private BigDecimal precoUnitario;
 
-    //@NotNull
+    @NotNull
     private Integer quantidadeEstoque;
 
-    //@NotNull
+    @NotNull
     private Long idCategoria;
 
     public String getNome() {
