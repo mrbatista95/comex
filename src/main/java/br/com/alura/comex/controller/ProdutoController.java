@@ -6,6 +6,9 @@ import br.com.alura.comex.model.Categoria;
 import br.com.alura.comex.model.Produto;
 import br.com.alura.comex.repository.CategoriaRepository;
 import br.com.alura.comex.repository.ProdutoRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
@@ -32,8 +35,9 @@ public class ProdutoController {
     }
 
     @GetMapping
-    public List<ProdutoDto> getProdutos() {
-        List<Produto> produtos = produtoRepository.findAll();
+    public List<ProdutoDto> getProdutos(@RequestParam(name = "page", required = true) Integer page, @RequestParam(name = "size", required = true) Integer size) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "nome"));
+        Page<Produto> produtos = produtoRepository.findAll(pageRequest);
         return ProdutoDto.converter(produtos);
     }
 
@@ -54,4 +58,27 @@ public class ProdutoController {
 
         return ResponseEntity.created(uri).body(new ProdutoDto(produto));
     }
+
+    @PutMapping("/{id}")
+    @Transactional
+    public ResponseEntity<ProdutoDto> atualizar(@PathVariable Long id, @RequestBody @Valid ProdutoForm form) {
+        Optional<Produto> optional = produtoRepository.findById(id);
+        if (optional.isPresent()) {
+            Produto produto = form.atualizar(id, produtoRepository);
+            return ResponseEntity.ok(new ProdutoDto(produto));
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity<ProdutoDto> remover(@PathVariable Long id) {
+        Optional<Produto> optional = produtoRepository.findById(id);
+        if (optional.isPresent()) {
+            produtoRepository.deleteById(id);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
 }

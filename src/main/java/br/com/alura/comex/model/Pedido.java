@@ -2,17 +2,10 @@ package br.com.alura.comex.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "pedidos")
@@ -31,6 +24,9 @@ public class Pedido {
 
     @Enumerated(EnumType.STRING)
     private TipoDesconto tipoDesconto = TipoDesconto.NENHUM;
+
+	@OneToMany(mappedBy = "pedido")
+	private List<ItemDePedido> itensDePedido = new ArrayList<ItemDePedido>();
 
     public Pedido() {
     }
@@ -74,5 +70,26 @@ public class Pedido {
 	public void setTipoDesconto(TipoDesconto tipoDesconto) {
 		this.tipoDesconto = tipoDesconto;
 	}
-    
+
+	public List<ItemDePedido> getItensDePedido() {
+		return itensDePedido;
+	}
+
+	public void setItensDePedido(List<ItemDePedido> itensDePedido) {
+		this.itensDePedido = itensDePedido;
+	}
+
+	public void desconto() {
+		BigDecimal total = BigDecimal.ZERO;
+		BigDecimal valor = BigDecimal.ONE;
+		if (this.tipoDesconto == TipoDesconto.NENHUM) {
+			valor = BigDecimal.ZERO;
+		}
+
+		if (this.tipoDesconto == TipoDesconto.FIDELIDADE) {
+			valor = new BigDecimal("0.05");
+		}
+		total = itensDePedido.stream().map(itensDePedido -> itensDePedido.getPrecoUnitario()).reduce(BigDecimal::add).get().multiply(valor);
+		this.desconto = total;
+	}
 }

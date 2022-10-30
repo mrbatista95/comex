@@ -36,7 +36,7 @@ public class CategoriaController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<CategoriaDto> cadastrar(@RequestBody @Valid CategoriaForm form, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<CategoriaDto> postCategoria(@RequestBody @Valid CategoriaForm form, UriComponentsBuilder uriBuilder) {
         Categoria categoria = new Categoria();
         categoria.setNome(form.getNome());
         categoriaRepository.save(categoria);

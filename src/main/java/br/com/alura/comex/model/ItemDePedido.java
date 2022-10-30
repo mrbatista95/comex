@@ -17,7 +17,7 @@ public class ItemDePedido {
     @Column(nullable = false)
     private Integer quantidade;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     private Pedido pedido;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
@@ -33,7 +33,6 @@ public class ItemDePedido {
     }
 
     public ItemDePedido(Integer quantidade, Produto produto) {
-        ;
         this.quantidade = quantidade;
         this.produto = produto;
         this.precoUnitario = produto.getPrecoUnitario();
@@ -55,11 +54,11 @@ public class ItemDePedido {
         return quantidade;
     }
 
-    public Pedido getPedidoId() {
+    public Pedido getPedido() {
         return pedido;
     }
 
-    public Produto getProdutoId() {
+    public Produto getProduto() {
         return produto;
     }
 
@@ -81,5 +80,19 @@ public class ItemDePedido {
 
     public void setTipoDesconto(TipoDescontoItem tipoDesconto) {
         this.tipoDesconto = tipoDesconto;
+    }
+
+    public void desconto() {
+        BigDecimal total = BigDecimal.ZERO;
+        if (this.tipoDesconto == TipoDescontoItem.NENHUM) {
+            BigDecimal valor = BigDecimal.ZERO;
+            total = this.precoUnitario.multiply(valor);
+        }
+
+        if (this.tipoDesconto == TipoDescontoItem.QUANTIDADE) {
+            BigDecimal valor = new BigDecimal("0.10");
+            total = this.precoUnitario.multiply(valor);
+        }
+        this.desconto = total;
     }
 }
