@@ -9,14 +9,12 @@ public class PedidoDto {
 
     private Long id;
     private String nomeCliente;
-    private List<Long> idProdutos;
-    private List<Integer> quantidades;
+    private List<ItemDePedidoDto> itensDePedidoDto;
 
     public PedidoDto(Pedido pedido) {
         this.id = pedido.getId();
         this.nomeCliente = pedido.getCliente().getNome();
-        this.idProdutos = pedido.getItensDePedido().stream().map(itemDePedido -> itemDePedido.getProduto().getId()).collect(Collectors.toList());
-        this.quantidades = pedido.getItensDePedido().stream().map(itemDePedido -> itemDePedido.getQuantidade()).collect(Collectors.toList());
+        this.itensDePedidoDto = pedido.getItensDePedido().stream().map(ItemDePedidoDto::new).collect(Collectors.toList());
     }
 
     public Long getId() {
@@ -27,12 +25,8 @@ public class PedidoDto {
         return nomeCliente;
     }
 
-    public List<Long> getIdProdutos() {
-        return idProdutos;
-    }
-
-    public List<Integer> getQuantidades() {
-        return quantidades;
+    public List<ItemDePedidoDto> getItensDePedidoDto() {
+        return itensDePedidoDto;
     }
 
     public static List<PedidoDto> converter(List<Pedido> pedidos) {

@@ -63,9 +63,11 @@ public class PedidoController {
             }
 
             itemDePedido.desconto();
+            itemDePedido.calcularPrecoDesconto();
 
             pedido.getItensDePedido().add(itemDePedido);
             itemDePedido.setPedido(pedido);
+
             itemDePedidoRepository.save(itemDePedido);
         }
 
@@ -74,6 +76,8 @@ public class PedidoController {
         }
 
         pedido.desconto();
+        pedido.calcularPrecoTotal();
+        pedido.calcularPrecoDesconto();
 
         pedidoRepository.save(pedido);
 

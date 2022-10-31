@@ -28,6 +28,10 @@ public class Pedido {
 	@OneToMany(mappedBy = "pedido")
 	private List<ItemDePedido> itensDePedido = new ArrayList<ItemDePedido>();
 
+	private BigDecimal precoTotal;
+
+	private BigDecimal precoDesconto;
+
     public Pedido() {
     }
 
@@ -79,8 +83,23 @@ public class Pedido {
 		this.itensDePedido = itensDePedido;
 	}
 
+	public BigDecimal getPrecoTotal() {
+		return precoTotal;
+	}
+
+	public void setPrecoTotal(BigDecimal precoTotal) {
+		this.precoTotal = precoTotal;
+	}
+
+	public BigDecimal getPrecoDesconto() {
+		return precoDesconto;
+	}
+
+	public void setPrecoDesconto(BigDecimal precoDesconto) {
+		this.precoDesconto = precoDesconto;
+	}
+
 	public void desconto() {
-		BigDecimal total = BigDecimal.ZERO;
 		BigDecimal valor = BigDecimal.ONE;
 		if (this.tipoDesconto == TipoDesconto.NENHUM) {
 			valor = BigDecimal.ZERO;
@@ -89,7 +108,14 @@ public class Pedido {
 		if (this.tipoDesconto == TipoDesconto.FIDELIDADE) {
 			valor = new BigDecimal("0.05");
 		}
-		total = itensDePedido.stream().map(itensDePedido -> itensDePedido.getPrecoUnitario()).reduce(BigDecimal::add).get().multiply(valor);
+		BigDecimal total = itensDePedido.stream().map(itensDePedido -> itensDePedido.getPrecoDesconto()).reduce(BigDecimal::add).get().multiply(valor);
 		this.desconto = total;
+	}
+
+	public void calcularPrecoTotal() {
+		this.precoTotal = itensDePedido.stream().map(itensDePedido -> itensDePedido.getPrecoDesconto()).reduce(BigDecimal::add).get();
+	}
+	public void calcularPrecoDesconto() {
+		this.precoDesconto = this.precoTotal.subtract(this.desconto);
 	}
 }

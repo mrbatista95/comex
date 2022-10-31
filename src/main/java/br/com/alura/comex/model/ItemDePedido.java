@@ -28,6 +28,12 @@ public class ItemDePedido {
     @Enumerated(EnumType.STRING)
     private TipoDescontoItem tipoDesconto = TipoDescontoItem.NENHUM;
 
+    @Column(name="preco_total")
+    private BigDecimal precoTotal;
+
+    @Column(name="preco_desconto")
+    private BigDecimal precoDesconto;
+
     public ItemDePedido() {
         super();
     }
@@ -36,6 +42,7 @@ public class ItemDePedido {
         this.quantidade = quantidade;
         this.produto = produto;
         this.precoUnitario = produto.getPrecoUnitario();
+        this.precoTotal = produto.getPrecoUnitario().multiply(BigDecimal.valueOf(quantidade));
     }
 
     public BigDecimal getValorTotalItem() {
@@ -82,17 +89,38 @@ public class ItemDePedido {
         this.tipoDesconto = tipoDesconto;
     }
 
+    public BigDecimal getPrecoTotal() {
+        return precoTotal;
+    }
+
+    public void setPrecoTotal(BigDecimal precoTotal) {
+        this.precoTotal = precoTotal;
+    }
+
+    public BigDecimal getPrecoDesconto() {
+        return precoDesconto;
+    }
+
+    public void setPrecoDesconto(BigDecimal precoDesconto) {
+        this.precoDesconto = precoDesconto;
+    }
+
     public void desconto() {
         BigDecimal total = BigDecimal.ZERO;
         if (this.tipoDesconto == TipoDescontoItem.NENHUM) {
             BigDecimal valor = BigDecimal.ZERO;
-            total = this.precoUnitario.multiply(valor);
+            total = this.precoUnitario.multiply(valor).multiply(BigDecimal.valueOf(this.quantidade));
         }
 
         if (this.tipoDesconto == TipoDescontoItem.QUANTIDADE) {
             BigDecimal valor = new BigDecimal("0.10");
-            total = this.precoUnitario.multiply(valor);
+            total = this.precoUnitario.multiply(valor).multiply(BigDecimal.valueOf(this.quantidade));
         }
         this.desconto = total;
     }
+
+    public void calcularPrecoDesconto() {
+        this.precoDesconto = this.precoTotal.subtract(this.desconto);
+    }
+
 }

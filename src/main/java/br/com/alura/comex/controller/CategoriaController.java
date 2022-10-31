@@ -3,7 +3,9 @@ package br.com.alura.comex.controller;
 import br.com.alura.comex.controller.dto.CategoriaDto;
 import br.com.alura.comex.controller.form.CategoriaForm;
 import br.com.alura.comex.model.Categoria;
+import br.com.alura.comex.model.CategoriaProdutoProjection;
 import br.com.alura.comex.repository.CategoriaRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
@@ -68,5 +70,8 @@ public class CategoriaController {
         return ResponseEntity.notFound().build();
     }
 
-
+    @GetMapping("/pedidos")
+    public ResponseEntity<List<CategoriaProdutoProjection>> listarPedidos() {
+        return new ResponseEntity<>(categoriaRepository.listCategoriaProduto(), HttpStatus.OK);
+    }
 }
