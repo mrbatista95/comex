@@ -78,4 +78,8 @@ public class Produto {
 		this.categoria = categoria;
 	}
 
+	public void retiraDoEstoque(Integer quantiade) {
+		this.quantidadeEstoque = this.quantidadeEstoque - quantiade;
+	}
+
 }

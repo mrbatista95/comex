@@ -118,4 +118,7 @@ public class Pedido {
 	public void calcularPrecoDesconto() {
 		this.precoDesconto = this.precoTotal.subtract(this.desconto);
 	}
+
+
+
 }

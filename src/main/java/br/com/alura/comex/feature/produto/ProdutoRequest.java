@@ -1,13 +1,16 @@
 package br.com.alura.comex.feature.produto;
 
+import br.com.alura.comex.entity.Categoria;
 import br.com.alura.comex.entity.Produto;
 import br.com.alura.comex.repository.ProdutoRepository;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.Optional;
 
 public class ProdutoRequest {
 
@@ -19,7 +22,7 @@ public class ProdutoRequest {
     @NotNull @Min(value = 0)
     private BigDecimal precoUnitario;
 
-    @NotNull
+    @NotNull @Min(value = 0)
     private Integer quantidadeEstoque;
 
     @NotNull
@@ -65,14 +68,4 @@ public class ProdutoRequest {
         this.idCategoria = idCategoria;
     }
 
-    public Produto atualizar(Long id, ProdutoRepository produtoRepository) {
-        Produto produto = produtoRepository.getReferenceById(id);
-
-        produto.setNome(this.nome);
-        produto.setDescricao(this.descricao);
-        produto.setPrecoUnitario(this.precoUnitario);
-        produto.setQuantidadeEstoque(this.quantidadeEstoque);
-
-        return produto;
-    }
 }

@@ -1,7 +1,6 @@
 package br.com.alura.comex.feature.produto;
 
 import br.com.alura.comex.entity.Categoria;
-import br.com.alura.comex.entity.Cliente;
 import br.com.alura.comex.entity.Produto;
 import br.com.alura.comex.repository.CategoriaRepository;
 import br.com.alura.comex.repository.ProdutoRepository;
@@ -28,6 +27,7 @@ public class ProdutoController {
     private final ProdutoRepository produtoRepository;
     private final CategoriaRepository categoriaRepository;
 
+
     public ProdutoController(ProdutoRepository produtoRepository, CategoriaRepository categoriaRepository){
         this.produtoRepository = produtoRepository;
         this.categoriaRepository = categoriaRepository;
@@ -49,12 +49,12 @@ public class ProdutoController {
         produto.setQuantidadeEstoque(produtoRequest.getQuantidadeEstoque());
         produto.setPrecoUnitario(produtoRequest.getPrecoUnitario());
 
-        Optional<Categoria> categoria = categoriaRepository.findById(produtoRequest.getIdCategoria());
-        if (categoria.isEmpty()) {
-            return ResponseEntity.badRequest().build();
+        Optional<Categoria> optional = categoriaRepository.findById(produtoRequest.getIdCategoria());
+        if (!optional.isPresent()) {
+            return ResponseEntity.notFound().build();
         }
 
-        produto.setCategoria(categoria.get());
+        produto.setCategoria(optional.get());
 
         produtoRepository.save(produto);
 
@@ -66,13 +66,27 @@ public class ProdutoController {
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity<ProdutoResponse> putProduto(@PathVariable Long id, @RequestBody @Valid ProdutoRequest produtoRequest) {
-        Optional<Produto> optional = produtoRepository.findById(id);
+        Optional<Produto> optionalProduto = produtoRepository.findById(id);
 
-        if (optional.isEmpty()) {
+        if (!optionalProduto.isPresent()) {
             return ResponseEntity.notFound().build();
         }
 
-        Produto produto = produtoRequest.atualizar(id, produtoRepository);
+        Produto produto = optionalProduto.get();
+
+        produto.setNome(produtoRequest.getNome());
+        produto.setDescricao(produtoRequest.getDescricao());
+        produto.setPrecoUnitario(produtoRequest.getPrecoUnitario());
+        produto.setQuantidadeEstoque(produtoRequest.getQuantidadeEstoque());
+
+        Optional<Categoria> optionalCategoria = categoriaRepository.findById(produtoRequest.getIdCategoria());
+
+        if (!optionalCategoria.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        produto.setCategoria(optionalCategoria.get());
+
         return ResponseEntity.ok(new ProdutoResponse(produto));
     }
 

@@ -105,7 +105,7 @@ public class ItemDePedido {
         this.precoDesconto = precoDesconto;
     }
 
-    public void desconto() {
+    public void aplicarDesconto() {
         BigDecimal total = BigDecimal.ZERO;
         if (this.tipoDesconto == TipoDescontoItem.NENHUM) {
             BigDecimal valor = BigDecimal.ZERO;

@@ -8,7 +8,7 @@ public class PedidoRequest {
     @NotNull
     private Long idCliente;
 
-    @NotNull
+    //@NotNull
     private List<ItemDePedidoRequest> itemDePedidoRequest;
 
     public Long getIdCliente() {
@@ -19,11 +19,11 @@ public class PedidoRequest {
         this.idCliente = idCliente;
     }
 
-    public List<ItemDePedidoRequest> getItemDePedidoForm() {
+    public List<ItemDePedidoRequest> getItemDePedidoRequest() {
         return itemDePedidoRequest;
     }
 
-    public void setItemDePedidoForms(List<ItemDePedidoRequest> itemDePedidoRequest) {
+    public void setItemDePedidoRequest(List<ItemDePedidoRequest> itemDePedidoRequest) {
         this.itemDePedidoRequest = itemDePedidoRequest;
     }
 }
