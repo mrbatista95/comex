@@ -1,8 +1,10 @@
 package br.com.alura.comex.feature.pedido;
 
 import br.com.alura.comex.entity.Pedido;
+import org.springframework.data.domain.Page;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,9 +18,12 @@ public class PedidoResponse {
 
     private BigDecimal precoDesconto;
 
+    private LocalDate data;
+
     public PedidoResponse(Pedido pedido) {
         this.id = pedido.getId();
         this.nomeCliente = pedido.getCliente().getNome();
+        this.data = pedido.getData();
         this.itensDePedidoResponse = pedido.getItensDePedido().stream().map(ItemDePedidoResponse::new).collect(Collectors.toList());
         this.precoTotal = pedido.getPrecoTotal();
         this.precoDesconto = pedido.getPrecoDesconto();
@@ -30,6 +35,10 @@ public class PedidoResponse {
 
     public String getNomeCliente() {
         return nomeCliente;
+    }
+
+    public LocalDate getData() {
+        return data;
     }
 
     public List<ItemDePedidoResponse> getItensDePedidoResponse() {
@@ -44,8 +53,8 @@ public class PedidoResponse {
         return precoDesconto;
     }
 
-    public static List<PedidoResponse> converter(List<Pedido> pedidos) {
-        return pedidos.stream().map(PedidoResponse::new).collect(Collectors.toList());
+    public static Page<PedidoResponse> converter(Page<Pedido> pedidos) {
+        return pedidos.map(PedidoResponse::new);
     }
 
 }

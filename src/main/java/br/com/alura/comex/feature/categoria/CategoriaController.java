@@ -3,6 +3,8 @@ package br.com.alura.comex.feature.categoria;
 import br.com.alura.comex.entity.Categoria;
 import br.com.alura.comex.entity.CategoriaProdutoProjection;
 import br.com.alura.comex.repository.CategoriaRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -46,6 +48,20 @@ public class CategoriaController {
         return ResponseEntity.created(uri).body(new CategoriaResponse(categoria));
     }
 
+    @PatchMapping("/{id}")
+    @Transactional
+    public ResponseEntity<CategoriaResponse> patchCategoria(@PathVariable Long id) {
+        Optional<Categoria> optionalCategoria = categoriaRepository.findById(id);
+
+        if (!optionalCategoria.isPresent()) {
+
+            return ResponseEntity.notFound().build();
+        }
+
+        optionalCategoria.get().alternaStatus();
+        return ResponseEntity.ok(new CategoriaResponse(optionalCategoria.get()));
+    }
+
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity<CategoriaResponse> putCategoria(@PathVariable Long id, @RequestBody @Valid CategoriaRequest categoriaRequest) {
@@ -69,7 +85,15 @@ public class CategoriaController {
     }
 
     @GetMapping("/pedidos")
+    @Cacheable(value="listaCategoriaPedidos")
     public ResponseEntity<List<CategoriaProdutoProjection>> listPedidos() {
+        System.out.println("sem cache");
         return new ResponseEntity<>(categoriaRepository.listCategoriaProduto(), HttpStatus.OK);
+    }
+
+    @GetMapping("/aW52YWxpZGEgcmVsYXTDs3JpbyBkZSB2ZW5kYXM")
+    @CacheEvict(value="listaCategoriaPedidos", allEntries = true)
+    public ResponseEntity limpaCache() {
+        return ResponseEntity.ok().build();
     }
 }

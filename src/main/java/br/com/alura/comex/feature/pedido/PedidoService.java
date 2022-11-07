@@ -7,6 +7,8 @@ import br.com.alura.comex.repository.ClienteRepository;
 import br.com.alura.comex.repository.ItemDePedidoRepository;
 import br.com.alura.comex.repository.PedidoRepository;
 import br.com.alura.comex.repository.ProdutoRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -55,6 +57,15 @@ public class PedidoService {
         itemDePedidoRepository.saveAll(itensDePedido);
 
         return pedido;
+    }
+
+    public Page<Pedido> listPedidos(Pageable pageable) {
+        Page<Pedido> pedidos = pedidoRepository.findAll(pageable);
+        return pedidos;
+    }
+
+    public Pedido findPedido(Long id) {
+        return pedidoRepository.findById(id).orElseThrow(() -> new NotFoundException(String.format("Pedido com id: %s nao encontrado", id)));
     }
 
     private List<ItemDePedido> calculaItensDoPedidoEAtualizaEstoque(PedidoRequest pedidoRequest) {

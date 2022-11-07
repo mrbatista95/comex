@@ -57,4 +57,13 @@ public class Categoria {
         this.produtos.add(produto);
     }
 
+    public void alternaStatus() {
+        if (this.status == StatusCategoria.ATIVA) {
+            this.status = StatusCategoria.INATIVA;
+        }
+        else {
+            this.status = StatusCategoria.ATIVA;
+        }
+    }
+
 }

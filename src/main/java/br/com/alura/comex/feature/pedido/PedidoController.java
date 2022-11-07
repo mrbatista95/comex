@@ -1,6 +1,10 @@
 package br.com.alura.comex.feature.pedido;
 
 import br.com.alura.comex.entity.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -21,9 +25,16 @@ public class PedidoController {
     }
 
     @GetMapping
-    public List<PedidoResponse> getPedidos() {
-        List<Pedido> pedidos = pedidoService.listAll();
-        return PedidoResponse.converter(pedidos);
+    public Page<PedidosResponse> getPedidos(@PageableDefault(direction = Sort.Direction.DESC, page = 0, size = 5) Pageable pageable) {
+
+        Page<Pedido> pedidos = pedidoService.listPedidos(pageable);
+        return PedidosResponse.converter(pedidos);
+    }
+
+    @GetMapping("/{id}")
+    public PedidoResponse getPedido(@PathVariable Long id) {
+        Pedido pedido = pedidoService.findPedido(id);
+        return new PedidoResponse(pedido);
     }
 
     @PostMapping
